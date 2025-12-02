@@ -1,0 +1,63 @@
+{
+  "name": "seyfo",
+  "version": "1.4.0",
+  "description": "Cross-platform kurulum kolaylaştırma ve PM2 benzeri process yönetim CLI aracı",
+  "main": "lib/index.js",
+  "bin": {
+    "seyfo": "./bin/seyfo.js"
+  },
+  "files": [
+    "lib",
+    "bin"
+  ],
+  "scripts": {
+    "test": "jest",
+    "lint": "eslint .",
+    "prepublishOnly": "npm test"
+  },
+  "keywords": [
+    "seyfo",
+    "cli",
+    "cross-platform",
+    "windows",
+    "linux",
+    "macos",
+    "ubuntu",
+    "installer",
+    "process-manager",
+    "pm2",
+    "daemon",
+    "mongodb",
+    "cloudron",
+    "docker",
+    "nginx",
+    "postgresql",
+    "redis",
+    "certbot",
+    "automation",
+    "devops"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/seyfooksck/seyfo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/seyfooksck/seyfo/issues"
+  },
+  "homepage": "https://github.com/seyfooksck/seyfo#readme",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "commander": "^11.1.0",
+    "inquirer": "^8.2.6",
+    "ora": "^5.4.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.55.0",
+    "jest": "^29.7.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
