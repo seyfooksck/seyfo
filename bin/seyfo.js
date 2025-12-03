@@ -8,8 +8,12 @@ const installers = require('../lib/installers');
 const { executeCommands, checkSystem } = require('../lib/executor');
 const pm = require('../lib/pm');
 const platformInfo = require('../lib/platform');
+const updateChecker = require('../lib/update-checker');
 
 const isWindows = process.platform === 'win32';
+
+// Her komut çalıştığında kullanım sayacını artır
+updateChecker.incrementUsage();
 
 program
   .name('seyfo')
@@ -34,7 +38,10 @@ function showBanner() {
 program
   .command('list')
   .description('Kurulabilir yazılımları listeler')
-  .action(() => {
+  .action(async () => {
+    // Güncelleme kontrolü
+    await updateChecker.checkAndEnforceUpdate();
+    
     showBanner();
     console.log(chalk.yellow('📦 Kurulabilir Yazılımlar:\n'));
     
@@ -51,7 +58,10 @@ program
 program
   .command('info [software]')
   .description('Yazılım hakkında detaylı bilgi gösterir')
-  .action((software) => {
+  .action(async (software) => {
+    // Güncelleme kontrolü
+    await updateChecker.checkAndEnforceUpdate();
+    
     showBanner();
     
     if (!software) {
@@ -69,6 +79,7 @@ program
       console.log(chalk.gray('    seyfo list     - Kurulabilir yazılımlar'));
       console.log(chalk.gray('    seyfo system   - Sistem bilgileri'));
       console.log(chalk.gray('    seyfo ps       - Process listesi'));
+      console.log(chalk.gray('    seyfo update   - Güncelleme kontrolü'));
       console.log(chalk.gray('    seyfo --help   - Tüm komutlar'));
       console.log();
       return;
@@ -105,6 +116,9 @@ program
   .option('--dry-run', 'Komutları çalıştırmadan göster')
   .option('--version <ver>', 'Belirli versiyon kur')
   .action(async (software, options) => {
+    // Güncelleme kontrolü
+    await updateChecker.checkAndEnforceUpdate();
+    
     showBanner();
     
     // Sistem kontrolü
@@ -179,6 +193,9 @@ program
   .option('-y, --yes', 'Onay sormadan kaldır')
   .option('--dry-run', 'Komutları çalıştırmadan göster')
   .action(async (software, options) => {
+    // Güncelleme kontrolü
+    await updateChecker.checkAndEnforceUpdate();
+    
     showBanner();
     
     const installer = installers[software.toLowerCase()];
@@ -224,7 +241,10 @@ program
 program
   .command('system')
   .description('Sistem bilgilerini gösterir')
-  .action(() => {
+  .action(async () => {
+    // Güncelleme kontrolü
+    await updateChecker.checkAndEnforceUpdate();
+    
     showBanner();
     console.log(chalk.cyan('💻 Sistem Bilgileri\n'));
     
@@ -256,6 +276,9 @@ program
   .command('setup')
   .description('İnteraktif kurulum menüsü')
   .action(async () => {
+    // Güncelleme kontrolü
+    await updateChecker.checkAndEnforceUpdate();
+    
     showBanner();
     
     const inquirer = require('inquirer');
@@ -324,7 +347,10 @@ program
   .option('-i, --interpreter <interpreter>', 'Yorumlayıcı (node, python, bash)', 'node')
   .option('--cwd <path>', 'Çalışma dizini')
   .option('--watch', 'Dosya değişikliklerini izle')
-  .action((script, options) => {
+  .action(async (script, options) => {
+    // Güncelleme kontrolü
+    await updateChecker.checkAndEnforceUpdate();
+    
     try {
       const name = options.name || script.replace(/\.[^/.]+$/, '').replace(/[^a-zA-Z0-9]/g, '-');
       
@@ -349,7 +375,10 @@ program
 program
   .command('stop <name>')
   .description('Bir process\'i durdurur')
-  .action((name) => {
+  .action(async (name) => {
+    // Güncelleme kontrolü
+    await updateChecker.checkAndEnforceUpdate();
+    
     try {
       const proc = pm.stop(name);
       console.log(chalk.yellow(`\n⏹️  ${proc.name} durduruldu.\n`));
@@ -380,7 +409,10 @@ program
 program
   .command('stop-all')
   .description('Tüm process\'leri durdurur')
-  .action(() => {
+  .action(async () => {
+    // Güncelleme kontrolü
+    await updateChecker.checkAndEnforceUpdate();
+    
     const stopped = pm.stopAll();
     console.log(chalk.yellow(`\n⏹️  ${stopped.length} process durduruldu.\n`));
   });
@@ -389,7 +421,10 @@ program
 program
   .command('delete <name>')
   .description('Bir process\'i listeden siler')
-  .action((name) => {
+  .action(async (name) => {
+    // Güncelleme kontrolü
+    await updateChecker.checkAndEnforceUpdate();
+    
     try {
       const proc = pm.remove(name);
       console.log(chalk.red(`\n🗑️  ${proc.name} silindi.\n`));
@@ -404,7 +439,10 @@ program
   .command('ps')
   .alias('status')
   .description('Çalışan process\'leri listeler')
-  .action(() => {
+  .action(async () => {
+    // Güncelleme kontrolü
+    await updateChecker.checkAndEnforceUpdate();
+    
     const processes = pm.list();
     
     console.log(chalk.cyan('\n🔄 Process Listesi\n'));
@@ -451,7 +489,10 @@ program
   .command('describe <name>')
   .alias('show')
   .description('Process detaylarını gösterir')
-  .action((name) => {
+  .action(async (name) => {
+    // Güncelleme kontrolü
+    await updateChecker.checkAndEnforceUpdate();
+    
     try {
       const proc = pm.describe(name);
       
@@ -485,7 +526,10 @@ program
   .option('-n, --lines <number>', 'Gösterilecek satır sayısı', '50')
   .option('-f, --follow', 'Logları canlı takip et')
   .option('--error', 'Sadece hata loglarını göster')
-  .action((name, options) => {
+  .action(async (name, options) => {
+    // Güncelleme kontrolü
+    await updateChecker.checkAndEnforceUpdate();
+    
     try {
       const type = options.error ? 'error' : 'all';
       const logData = pm.logs(name, { 
@@ -551,7 +595,10 @@ program
 program
   .command('flush [name]')
   .description('Process loglarını temizler')
-  .action((name) => {
+  .action(async (name) => {
+    // Güncelleme kontrolü
+    await updateChecker.checkAndEnforceUpdate();
+    
     try {
       if (name) {
         pm.flushLogs(name);
@@ -571,7 +618,10 @@ program
   .command('startfile <config>')
   .alias('ecosystem')
   .description('Config dosyasından process\'leri başlatır')
-  .action((config) => {
+  .action(async (config) => {
+    // Güncelleme kontrolü
+    await updateChecker.checkAndEnforceUpdate();
+    
     try {
       const started = pm.startFromConfig(config);
       console.log(chalk.green(`\n✅ ${started.length} process başlatıldı:\n`));
@@ -589,7 +639,10 @@ program
 program
   .command('pm-info')
   .description('Process Manager bilgilerini gösterir')
-  .action(() => {
+  .action(async () => {
+    // Güncelleme kontrolü
+    await updateChecker.checkAndEnforceUpdate();
+    
     const sysInfo = platformInfo.getSystemInfo();
     
     console.log(chalk.cyan('\n📊 Seyfo Process Manager\n'));
@@ -610,7 +663,10 @@ program
 program
   .command('platform')
   .description('Platform ve paket yöneticisi bilgilerini gösterir')
-  .action(() => {
+  .action(async () => {
+    // Güncelleme kontrolü
+    await updateChecker.checkAndEnforceUpdate();
+    
     showBanner();
     console.log(chalk.cyan('🖥️  Platform Bilgileri\n'));
     
@@ -654,6 +710,30 @@ program
     });
     
     console.log();
+  });
+
+// Güncelleme kontrolü
+program
+  .command('update-check')
+  .description('Güncelleme kontrolü yapar')
+  .action(async () => {
+    await updateChecker.checkAndEnforceUpdate(true);
+  });
+
+// Manuel güncelleme
+program
+  .command('update')
+  .description('Seyfo\'yu en son sürüme günceller')
+  .action(async () => {
+    await updateChecker.manualUpdate();
+  });
+
+// Kullanım istatistikleri
+program
+  .command('usage-stats')
+  .description('Kullanım istatistiklerini gösterir')
+  .action(() => {
+    updateChecker.showUsageStats();
   });
 
 // Varsayılan - yardım göster

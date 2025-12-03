@@ -21,6 +21,7 @@ seyfo <command> [options] [arguments]
 |----------|----------|
 | Software | `list`, `info`, `install`, `uninstall`, `setup` |
 | System | `system` |
+| Update | `update-check`, `update`, `usage-stats` |
 | Process Manager | `start`, `stop`, `restart`, `stop-all`, `delete`, `ps`, `status`, `describe`, `logs`, `flush`, `startfile`, `pm-info` |
 
 ---
@@ -190,11 +191,110 @@ This command opens an interactive menu where you can select multiple software pa
 
 ---
 
+## Update Commands
+
+### update-check
+
+Check for available updates to Seyfo.
+
+```bash
+seyfo update-check
+```
+
+**Output:**
+```
+🔍 Güncelleme kontrol ediliyor...
+✅ Seyfo güncel! (v1.4.0)
+```
+
+Or if update is available:
+```
+🔍 Güncelleme kontrol ediliyor...
+════════════════════════════════════════════════════════════
+⚠️  YENİ SÜRÜM MEVCUT!
+════════════════════════════════════════════════════════════
+Mevcut sürüm: 1.4.0
+Yeni sürüm:   1.5.0
+
+Güncellemek için:
+  npm install -g seyfo@latest
+
+veya
+  npm update -g seyfo
+════════════════════════════════════════════════════════════
+```
+
+**Behavior:**
+- Checks npm registry for latest version
+- Automatically triggered on daily usage
+- Major version updates are enforced (blocks execution)
+- Minor/patch updates show warning but allow continuation
+
+---
+
+### update
+
+Update Seyfo to the latest version.
+
+```bash
+seyfo update
+```
+
+**Description:**
+Automatically downloads and installs the latest version of Seyfo from npm.
+
+**Output:**
+```
+🔄 Seyfo güncelleniyor...
+Mevcut sürüm: 1.4.0
+
+[npm update output]
+
+✅ Güncelleme tamamlandı!
+```
+
+---
+
+### usage-stats
+
+Display usage statistics and tracking information.
+
+```bash
+seyfo usage-stats
+```
+
+**Output:**
+```
+📊 Kullanım İstatistikleri
+
+  Toplam kullanım:  42
+  Bugünkü kullanım: 5
+  Mevcut sürüm:     1.4.0
+  Son kontrol:      2025-12-03
+
+  Son 7 gün:
+    2025-11-27  ████████ 8
+    2025-11-28  ██████ 6
+    2025-11-29  ████ 4
+    2025-11-30  ███████████ 11
+    2025-12-01  █████ 5
+    2025-12-02  ███ 3
+    2025-12-03  █████ 5
+```
+
+**Features:**
+- Tracks total and daily command usage
+- Shows last update check date
+- Displays usage graph for last 7 days
+- Data stored in `~/.seyfo/usage.json`
+
+---
+
 ## System Commands
 
 ### system
 
-Display system information.
+Show system information.
 
 ```bash
 seyfo system
