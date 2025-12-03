@@ -106,6 +106,16 @@ seyfo setup
 | `seyfo pm-info` | Process Manager bilgisi |
 | `seyfo info` | Genel seyfo bilgisi |
 
+## 🔄 Güncelleme Komutları
+
+| Komut | Açıklama |
+|-------|----------|
+| `seyfo update-check` | Güncelleme kontrolü yap |
+| `seyfo update` | Seyfo'yu güncelle |
+| `seyfo usage-stats` | Kullanım istatistiklerini göster |
+
+> **Not:** Seyfo, günde en az bir kez kullanıldığında otomatik olarak güncelleme kontrolü yapar ve yeni sürüm varsa kullanıcıyı bilgilendirir. Major versiyon güncellemeleri zorunludur.
+
 ## 📚 Dokümantasyon
 
 Detaylı kullanım için `docs/` klasörüne bakın:
